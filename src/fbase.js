@@ -4,7 +4,8 @@
 // // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-import * as firebase from 'firebase/app';
+import {initializeApp} from 'firebase/app';
+import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -14,8 +15,7 @@ const firebaseConfig = {
     messagingSenderId: process.env.REACT_APP_MESSAGIN_ID,
     appId: process.env.REACT_APP_APP_ID,
 };
-
-export default firebase.initializeApp(firebaseConfig);
-
+const app = initializeApp(firebaseConfig);
+export const authService = getAuth();
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
