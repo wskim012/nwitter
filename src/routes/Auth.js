@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { authService, firebaseInstance } from "fbase";
+import React from "react";
+import { authService } from "fbase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faTwitter,
+    faGoogle,
+    faGithub,
+  } from "@fortawesome/free-brands-svg-icons";
 import { 
     signInWithPopup,
     GoogleAuthProvider,
@@ -24,13 +30,19 @@ const Auth = () => {
     }
      
     return (
-      <div>
-        <AuthForm/>
-        <div>
-            <button onClick={onSocialClick} name="google">
-                Continue with Google
-            </button>
-        </div>
+        <div className="authContainer">
+            <FontAwesomeIcon
+            icon={faTwitter}
+            color={"#04AAFF"}
+            size="3x"
+            style={{ marginBottom: 30 }}
+            />
+            <AuthForm/>
+            <div className="authBtns">
+                <button onClick={onSocialClick} name="google" className="authBtn">
+                    Continue with Google <FontAwesomeIcon icon={faGoogle} />
+                </button>
+            </div>
       </div>
     );
   };
