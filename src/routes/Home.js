@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { dbService } from "fbase";
+import { dbService,storageService } from "fbase";
 import { addDoc, collection, serverTimestamp, getDocs, query,onSnapshot,orderBy} from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+import { ref, uploadString,getDownloadURL } from "@firebase/storage";
 import Nweet from "components/Nweet";
 
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState("");
   const [nweets, setNweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   useEffect(() => {
     const q = query(
@@ -24,16 +26,32 @@ const Home = ({ userObj }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     try{
-        const docRef = await addDoc(collection(dbService, "nweets"),{
-            text: nweet,
-            createdAt: serverTimestamp(),
-            creatorId: userObj.uid,
-        })
-        // console.log("Document written with ID: ", docRef.id);
+        let attachmentUrl = "";
+        // console.log(attachment)
+        if (attachment != "") {
+          // const attachmentRef = storageService
+          //   .ref()
+          //   .child(`${userObj.uid}/${uuidv4()}`);
+          const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+          const uploadFile = await uploadString(fileRef, attachment, "data_url");
+          // const response = await attachmentRef.putString(attachment, "data_url");
+          attachmentUrl = await getDownloadURL(uploadFile.ref);
+        }
+        // const fileRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+        // const response = await uploadString(fileRef, attachment, "data_url");
+        // console.log(response);
+        const nweetObj = {
+          text: nweet,
+          createdAt: serverTimestamp(),
+          creatorId: userObj.uid,
+          attachmentUrl,
+        };
+        await addDoc(collection(dbService, "nweets"),nweetObj); 
     } catch (error){
         console.log("Error adding document", error);
     }
     setNweet("");
+    setAttachment("");
   };
   const onChange = (event) => {
     const {
