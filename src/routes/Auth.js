@@ -32,7 +32,7 @@ const Auth = () => {
           } else {
             data = await signInWithEmailAndPassword(authService,email,password)
           };
-          console.log(data)
+          // console.log(data)
       } catch(error){
         console.log(error)
         setError(error.message);
